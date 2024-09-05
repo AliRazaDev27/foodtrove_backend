@@ -62,6 +62,7 @@ const productType = {
 const productSchema = new mongoose.Schema({
   title: {
     type: String,
+    unique: true,
     required: true
   },
   description: {

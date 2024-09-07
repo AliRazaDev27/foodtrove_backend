@@ -8,23 +8,42 @@ import cookieParser from 'cookie-parser'
 import seedProducts from './src/routes/seedProducts.js'
 import productRouter from "./src//routes/productRouter.js"
 
-// Initialization
+//Initialization
 dotenv.config()
 const FRONTEND_URL = process.env.FRONTEND_URL
+
+const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173']
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (e.g., mobile apps, Postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true); // If origin is in the allowed list
+    } else {
+      callback(new Error('Not allowed by CORS')); // If origin is not allowed
+    }
+  },
+  credentials: true,
+};
 db();
 const app = express()
 app.use(morgan('dev'))
 app.use(express.json())
 
-app.use(cors({ origin: FRONTEND_URL, credentials: true }))
+app.use(cors(corsOptions))
 app.use(cookieParser())
 app.use('/api/users', userRouter);
 app.use('/api/seed', seedProducts);
 app.use('/api/products', productRouter);
+app.get('/',(req, res) => res.send("Express on Vercel"))
 
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 // Server listening
+
 app.listen(PORT, () => {
   console.log(`Foodtrove app listening on port ${PORT}`)
 })
+
+export default app

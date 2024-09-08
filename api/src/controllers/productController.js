@@ -1,7 +1,6 @@
 import Product from "../models/productModel.js";
 import connectDB from "../config/db.js";
 export async function getProductById(req, res) {
-  console.log("call")
   await connectDB();
   const { id } = req.params;
   const product = await Product.findById(id);
@@ -14,12 +13,10 @@ export async function getQueryProducts(req, res) {
     const { page } = req.query || 1
     let { search } = req.query;
     search = search || ""
-    console.log(typeof search)
     const { sortBy } = req.query;
     let { minPrice, maxPrice } = req.query;
     minPrice = minPrice ? Number(minPrice) : 0
     maxPrice = maxPrice ? Number(maxPrice) : 0
-    console.log("minPrice", minPrice, "maxPrice", maxPrice)
     let { category } = req.query;
     let { brand } = req.query;
     category = category && JSON.parse(category);
@@ -46,7 +43,6 @@ export async function getQueryProducts(req, res) {
       query.price = { $gte: minPrice }
     }
     // category and brand are array of string values, some values may be null or undefined so we need to selectivly query the products
-    console.log(query)
     const count = await Product.countDocuments(query);
     const products = await Product.find(query)
       .sort(sortOptions[sortBy])

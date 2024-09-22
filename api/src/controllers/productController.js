@@ -8,6 +8,7 @@ export async function getProductById(req, res) {
 }
 export async function getQueryProducts(req, res) {
   try {
+    console.log(req.query)
     await connectDB();
     const LIMIT = 9;
     const { page } = req.query || 1
@@ -45,6 +46,7 @@ export async function getQueryProducts(req, res) {
     // category and brand are array of string values, some values may be null or undefined so we need to selectivly query the products
     const count = await Product.countDocuments(query);
     const products = await Product.find(query)
+      .select("_id title price discountPercentage rating thumbnail category")
       .sort(sortOptions[sortBy])
       .skip((page - 1) * LIMIT)
       .limit(LIMIT);

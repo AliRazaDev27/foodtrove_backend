@@ -5,12 +5,10 @@ import morgan from 'morgan'
 import userRouter from './src/routes/userRoutes.js'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import seedProducts from './src/routes/seedProducts.js'
 import productRouter from "./src//routes/productRouter.js"
 
 //Initialization
 dotenv.config()
-const FRONTEND_URL = process.env.FRONTEND_URL
 
 const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173']
 const corsOptions = {
@@ -34,9 +32,7 @@ app.use(express.json())
 app.use(cors(corsOptions))
 app.use(cookieParser())
 app.use('/api/users', userRouter);
-app.use('/api/seed', seedProducts);
 app.use('/api/products', productRouter);
-app.get('/',(req, res) => res.send("Express on Vercel"))
 
 
 const PORT = process.env.PORT || 5000;
